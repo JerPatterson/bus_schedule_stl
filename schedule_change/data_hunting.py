@@ -25,6 +25,7 @@ def readSchedulePdf(lineNumber: int, futureSchedule = False) -> List[str]:
 
 def getDepartures(lineNumber: int, futureSchedule : bool = False) -> str:
     schedule = readSchedulePdf(lineNumber, futureSchedule)
+    print(schedule)
 
     departures = ""
     memorize = False

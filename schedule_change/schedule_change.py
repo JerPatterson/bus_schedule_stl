@@ -7,7 +7,7 @@ SCHEDULE_VARIATION = ["Dimanche", "Samedi", "Lundi au Vendredi"]
 
 
 def main():
-    printScheduleChanges(45)
+    printDepartures(48, True)
 
 
 def printDepartures(lineNumber: int, futureSchedule : bool = False) -> None:

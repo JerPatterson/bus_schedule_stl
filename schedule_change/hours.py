@@ -45,5 +45,4 @@ def eliminateSameHours(matches: List[Tuple[str]], differences: List[int]) -> Lis
                 matches[i] = (match[0], "XXhXX")
 
     return matches
-
     
