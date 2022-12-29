@@ -48,26 +48,16 @@ def makeListOfDepartures(lineNumber: int, futureSchedule = False) -> List[str]:
     departuresList = []
     departureTimes = getDeparturesFromTerminus(lineNumber, futureSchedule)
 
-    content = ""
-    digitEncountered = 0
-    for char in departureTimes:
-        if char.isdigit():
-            digitEncountered += 1
-        elif char == '@':
+    for word in departureTimes.split(' '):
+        word = word.removeprefix("\n")
+        if len(word) >= 4 and (word[1] == ':' or word[2] == ':'):
+            variationList.append(word[:5].removesuffix("\n"))
+            
+        if "Direction" in word:
             if len(variationList) != 0:
-                departuresList.append(deepcopy(variationList))
+                departuresList.append(variationList[:])
                 variationList = []
-            continue
-        elif digitEncountered == 0 or char != 'h':
-            continue
-
-        content += char
-
-        if digitEncountered == 4:
-            digitEncountered = 0
-            variationList.append(content)
-            content = ""
     
-    departuresList.append(deepcopy(variationList))
+    departuresList.append(variationList[:])
 
     return departuresList

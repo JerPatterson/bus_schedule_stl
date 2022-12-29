@@ -1,4 +1,4 @@
-from data_hunting import makeListOfDepartures, getDeparturesFromTerminus
+from data_hunting import getDeparturesFromTerminus, makeListOfDepartures
 from hours import findClosestHoursFromVariations
 
 
@@ -7,7 +7,8 @@ SCHEDULE_VARIATION = ["LUNDI au VENDREDI", "SAMEDI", "DIMANCHE"]
 
 
 def main():
-    printDepartures(48, True)
+    printDepartures(36, True)
+    print(makeListOfDepartures(36, True))
 
 
 def printDepartures(lineNumber: int, futureSchedule : bool = False) -> None:
