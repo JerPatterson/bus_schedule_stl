@@ -7,8 +7,7 @@ SCHEDULE_VARIATION = ["LUNDI au VENDREDI", "SAMEDI", "DIMANCHE"]
 
 
 def main():
-    printDepartures(36, True)
-    print(makeListOfDepartures(36, True))
+    printScheduleChanges(45)
 
 
 def printDepartures(lineNumber: int, futureSchedule : bool = False) -> None:
@@ -27,31 +26,35 @@ def printDepartures(lineNumber: int, futureSchedule : bool = False) -> None:
 
 
 
-def printScheduleChanges(lineNumber: int):
-    currentDepartures = makeListOfDepartures(lineNumber)
-    futureDepartures = makeListOfDepartures(lineNumber, True)
+def printScheduleChanges(lineNumber: int) -> None:
+    try:
+        currentDepartures = makeListOfDepartures(lineNumber)
+        futureDepartures = makeListOfDepartures(43, True)
 
-    currentVariation = 0
-    scheduleComparaison = findClosestHoursFromVariations(currentDepartures, futureDepartures)
+        currentVariation = 0
+        scheduleComparaison = findClosestHoursFromVariations(currentDepartures, futureDepartures)
 
-    for i, variation in enumerate(scheduleComparaison):
-        print('\n' + SCHEDULE_VARIATION[currentVariation // 2])
-        currentVariation += 1
-    
-        moreDepartures = isMoreDeparture(len(currentDepartures[i]), len(futureDepartures[i]))
+        for i, variation in enumerate(scheduleComparaison):
+            print('\n' + SCHEDULE_VARIATION[currentVariation // 2])
+            currentVariation += 1
+        
+            moreDepartures = hasMoreDeparture(len(currentDepartures[i]), len(futureDepartures[i]))
 
-        for time, otherTime in variation:
-            line = str(otherTime + " -> " + time) if moreDepartures else str(time + " -> " + otherTime)
+            for time, otherTime in variation:
+                line = str(otherTime + " -> " + time) if moreDepartures else str(time + " -> " + otherTime)
 
-            if 'X' in time or 'X' in otherTime:
-                line += "\t  NOUVEAU PASSAGE" if moreDepartures else "\tPASSAGE RETIRÉ"
-            elif time != otherTime:
-                line += "\t    CHANGEMENT"
+                if 'X' in time or 'X' in otherTime:
+                    line += "\t  NOUVEAU PASSAGE" if moreDepartures else "\tPASSAGE RETIRÉ"
+                elif time != otherTime:
+                    line += "\t    CHANGEMENT"
 
-            print(line)
+                print(line)
+    except:
+        print("ERREUR : Hors période de changement d'horaire...")
 
 
-def isMoreDeparture(currentDepartureNb, futureDepartureNb):
+
+def hasMoreDeparture(currentDepartureNb: int, futureDepartureNb: int) -> bool:
     departureChange = futureDepartureNb - currentDepartureNb
 
     if departureChange > 0:
