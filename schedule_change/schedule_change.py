@@ -1,9 +1,9 @@
-from data_hunting import makeListOfDepartures
+from data_hunting import makeListOfDepartures, getDeparturesFromTerminus
 from hours import findClosestHoursFromVariations
 
 
 SCHEDULE_PAGE_NUMBER = 1
-SCHEDULE_VARIATION = ["Dimanche", "Samedi", "Lundi au Vendredi"]
+SCHEDULE_VARIATION = ["LUNDI au VENDREDI", "SAMEDI", "DIMANCHE"]
 
 
 def main():
@@ -11,18 +11,19 @@ def main():
 
 
 def printDepartures(lineNumber: int, futureSchedule : bool = False) -> None:
-    content = "\n" if not futureSchedule else "\nHoraire à venir:"
-    schedule = makeListOfDepartures(lineNumber, futureSchedule)
+    content = "Horaire actuel:\n" if not futureSchedule else "Horaire à venir:\n"
+    departures = getDeparturesFromTerminus(lineNumber, futureSchedule).split("Direction")
 
-    currentVariation = 0
-    for variations in schedule:
-        content = '\n' + SCHEDULE_VARIATION[currentVariation // 2] + '\n'
-        currentVariation += 1
-        
-        for hour in variations:
-            content += hour + ' '
+    variationCount = 0
+    for variation in departures:
+        if len(variation) > 10:
+            if variationCount < 6:
+                content += '\n' + SCHEDULE_VARIATION[variationCount // 2] + '\n'
+                variationCount += 1
+            content += "Direction" + variation
 
-    print(content + '\n')
+    print(content)
+
 
 
 def printScheduleChanges(lineNumber: int):

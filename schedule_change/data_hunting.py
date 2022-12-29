@@ -1,5 +1,5 @@
 from urllib import request
-from PyPDF4 import PdfFileReader
+from pypdf import PdfReader
 from io import BytesIO
 from typing import List
 from copy import deepcopy
@@ -13,51 +13,40 @@ def readSchedulePdf(lineNumber: int, futureSchedule = False) -> List[str]:
 
     remoteFile = request.urlopen(url).read()
     memoryFile = BytesIO(remoteFile)
-    pdfFile = PdfFileReader(memoryFile)
+    pdfFile = PdfReader(memoryFile)
 
-    wholeDocText = []
+    text = ""
     for page in pdfFile.pages:
-            text = page.extractText()
-            wholeDocText.append(text.split(' '))
+            text += page.extract_text()
 
-    return wholeDocText
+    return text.split(' ')
 
 
-def getDepartures(lineNumber: int, futureSchedule : bool = False) -> str:
-    schedule = readSchedulePdf(lineNumber, futureSchedule)
-    print(schedule)
+def getDeparturesFromTerminus(lineNumber: int, futureSchedule : bool = False) -> str:
+    stopsSchedule = readSchedulePdf(lineNumber, futureSchedule)
 
     departures = ""
-    memorize = False
-    for word in schedule[1]:
-
-        if "Départ" in word:
-            departures += '@'
-            memorize = True
-
-        elif memorize and len(word) > 4 and word[3] == 'h':
-            departures += word
-
-        else:
-            memorize = False
+    appendInfos = False
+    appendTimes = False
+    for word in stopsSchedule:
+        if "Direction" in word:
+            departures += "\nDirection "
+            appendInfos = appendTimes = True
+        elif appendTimes and len(word) >= 4 and (word[1] == ':' or word[2] == ':'):
+            departures += ("\n" if appendInfos else " ") + word[:5]
+            appendInfos = False
+        elif appendInfos:
+            departures += word + " "
+        elif '\n' not in word:
+            appendTimes = False
 
     return departures
-
-
-def formatDepartures(departureTimes: str) -> str:
-    textFormated = ""
-    
-    for char in departureTimes:
-        if char.isdigit() or char == 'h' or char == '@':
-            textFormated += char
-
-    return textFormated
 
 
 def makeListOfDepartures(lineNumber: int, futureSchedule = False) -> List[str]:
     variationList = []
     departuresList = []
-    departureTimes = formatDepartures(getDepartures(lineNumber, futureSchedule))
+    departureTimes = getDeparturesFromTerminus(lineNumber, futureSchedule)
 
     content = ""
     digitEncountered = 0
