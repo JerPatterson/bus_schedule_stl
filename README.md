@@ -1,3 +1,3 @@
-As of now, it doesn't work with all the bus lines because of the lack of conformity with the agency pdf schedule. (Note: 2022-08-22 -> it worked perfectly fine with line 45)
+As of now (2022-12-28), it doesn't work with current schedule changes beacuse of the modifications made with the pdf by the agency. It will probably work next time the schedules change which is most likely this spring. 
 
-** Does not work with the link when it's outside of a schedule change period. To test use the test_files path instead.
+** Won't work with the link when it's outside of a schedule change period no matter what. Must use the test_files directory instead to test.
